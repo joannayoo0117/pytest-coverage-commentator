@@ -94,19 +94,19 @@ async function run(): Promise<void> {
     )
   })
 
-  if (comment) {
-    await octokit.issues.updateComment({
-      ...context.repo,
-      comment_id: comment.id,
-      body: message
-    })
-  } else {
-    await octokit.issues.createComment({
-      ...context.repo,
-      issue_number: pullRequestNumber ?? 0,
-      body: message
-    })
-  }
+  //if (comment) {
+  //  await octokit.issues.updateComment({
+  //    ...context.repo,
+  //    comment_id: comment.id,
+  //   body: message
+  //  })
+  // } else {
+  await octokit.issues.createComment({
+    ...context.repo,
+    issue_number: pullRequestNumber ?? 0,
+    body: message
+  })
+  // }
 }
 
 // eslint-disable-next-line github/no-then
