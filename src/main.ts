@@ -15,6 +15,7 @@ function createMessage(pytestResult: any): string {
   const lineOfText = newString.split('\n')
   let startKey = '0'
   let newMessage = '### :white_check_mark: Result of Pytest Coverage\n'
+  newMessage += '\n<details>'
   let lastMessage = ''
   let delLine = ''
   for (const i in lineOfText) {
@@ -38,7 +39,8 @@ function createMessage(pytestResult: any): string {
       ) {
         delete lineOfText[i]
       } else if (lineOfText[i].indexOf('passed in') >= 0) {
-        lastMessage += `\n~${lineOfText[i].replace(/=/g, '')}~`
+        # lastMessage += `\n~${lineOfText[i].replace(/=/g, '')}~`
+        lastMessage += '\n</details>\n'
         delete lineOfText[i]
       }
       if (lineOfText[i] !== undefined) {
