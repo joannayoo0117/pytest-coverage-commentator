@@ -39,7 +39,7 @@ function createMessage(pytestResult: any): string {
       ) {
         delete lineOfText[i]
       } else if (lineOfText[i].indexOf('passed in') >= 0) {
-        # lastMessage += `\n~${lineOfText[i].replace(/=/g, '')}~`
+        lastMessage += `\n~${lineOfText[i].replace(/=/g, '')}~`
         lastMessage += '\n</details>\n'
         delete lineOfText[i]
       }
