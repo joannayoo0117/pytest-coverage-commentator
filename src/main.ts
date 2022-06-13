@@ -11,20 +11,24 @@ const fs = require('fs')
 function createMessage(pytestResult: any): string {
   const file = fs.readFileSync(pytestResult)
   const newString = new String(file)
+  let prevcategory = undefined
 
   const lineOfText = newString.split('\n')
   let startKey = '0'
+  // Line 1 : ✅ Result of Pytest Coverage
   let newMessage = '### :white_check_mark: Result of Pytest Coverage\n'
   newMessage += '\n<details>'
   let lastMessage = ''
   let delLine = ''
   for (const i in lineOfText) {
+    // Line 2 : ---------- coverage: platform linux, python 3.8.10-final-0 -----------
     if (lineOfText[i].indexOf('coverage: platform') >= 0) {
       startKey = i
       newMessage += `\n${lineOfText[i]}\n`
       delete lineOfText[i]
       const iNext = parseInt(i) + 1
       delLine = iNext.toString()
+      // Line 3 : Header row
       newMessage +=
         '| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n'
     }
@@ -38,7 +42,7 @@ function createMessage(pytestResult: any): string {
         ) >= 0
       ) {
         delete lineOfText[i]
-      } else if (lineOfText[i].indexOf('passed in') >= 0) {
+      } else if (lineOfText[i].indexOf('passed') >= 0) { // LAST Line
         lastMessage += `\n~${lineOfText[i].replace(/=/g, '')}~`
         lastMessage += '\n</details>\n'
         delete lineOfText[i]
@@ -52,10 +56,18 @@ function createMessage(pytestResult: any): string {
             delete tabOfText[t]
           }
         }
+        // Line 4~ : content rows, in markdown format
         if (tabOfText[3] !== undefined) {
-          newMessage += `${
+          let newcategory = tabOfText[0].split('/')[1]
+          if (prevcategory == undefined || prevcategory != newcategory) {
+            newMessage += `${
+              `<summary>fax/${newcategory}</summary>\n\n`
+            }|\n`
+          }
+          newMessage += `\s${
             tabOfText[0] + tabOfText[1] + tabOfText[2] + tabOfText[3]
           }|\n`
+          prevcategory = newcategory
         }
       }
     }
