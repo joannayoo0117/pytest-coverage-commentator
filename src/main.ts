@@ -14,10 +14,10 @@ function createMessage(pytestResult: any): string {
 
   const lineOfText = newString.split('\n')
   let startKey = '0'
-  let newMessage = '### :white_check_mark: Result of Pytest Coverage\n'
-  newMessage += '\n<details>'
+  let newMessage = '<details><summary>Click to get pytest coverage!</summary>'
   let lastMessage = ''
   let delLine = ''
+  newMessage += '### :white_check_mark: Result of Pytest Coverage\n'
   for (const i in lineOfText) {
     if (lineOfText[i].indexOf('coverage: platform') >= 0) {
       startKey = i
@@ -40,7 +40,7 @@ function createMessage(pytestResult: any): string {
         delete lineOfText[i]
       } else if (lineOfText[i].indexOf('passed in') >= 0) {
         lastMessage += `\n~${lineOfText[i].replace(/=/g, '')}~`
-        lastMessage += '\n</details>\n'
+        lastMessage += '\n</details>'
         delete lineOfText[i]
       }
       if (lineOfText[i] !== undefined) {
@@ -94,19 +94,19 @@ async function run(): Promise<void> {
     )
   })
 
-  //if (comment) {
-  //  await octokit.issues.updateComment({
-  //    ...context.repo,
-  //    comment_id: comment.id,
-  //   body: message
-  //  })
-  // } else {
-  await octokit.issues.createComment({
-    ...context.repo,
-    issue_number: pullRequestNumber ?? 0,
-    body: message
-  })
-  // }
+  if (comment) {
+    await octokit.issues.updateComment({
+      ...context.repo,
+      comment_id: comment.id,
+      body: message
+    })
+  } else {
+    await octokit.issues.createComment({
+      ...context.repo,
+      issue_number: pullRequestNumber ?? 0,
+      body: message
+    })
+  }
 }
 
 // eslint-disable-next-line github/no-then
