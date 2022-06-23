@@ -17,7 +17,6 @@ function createMessage(pytestResult: any): string {
   let newMessage = '<details><summary>Click to get pytest coverage!</summary>'
   let lastMessage = ''
   let delLine = ''
-  newMessage += '### :white_check_mark: Result of Pytest Coverage\n'
   for (const i in lineOfText) {
     if (lineOfText[i].indexOf('coverage: platform') >= 0) {
       startKey = i
@@ -73,6 +72,7 @@ async function run(): Promise<void> {
   const pytestFileName = core.getInput('pytest-coverage')
 
   const message = createMessage(pytestFileName)
+  console.log(
 
   const context = github.context
   const pullRequestNumber = context.payload.pull_request?.number
@@ -102,9 +102,9 @@ async function run(): Promise<void> {
     })
   } else {
     await octokit.issues.createComment({
-      ...context.repo,
-      issue_number: pullRequestNumber ?? 0,
-      body: message
+    ...context.repo,
+    issue_number: pullRequestNumber ?? 0,
+    body: message
     })
   }
 }
