@@ -72,7 +72,7 @@ async function run(): Promise<void> {
   const pytestFileName = core.getInput('pytest-coverage')
 
   const message = createMessage(pytestFileName)
-  console.log(
+  console.log(message)
 
   const context = github.context
   const pullRequestNumber = context.payload.pull_request?.number
